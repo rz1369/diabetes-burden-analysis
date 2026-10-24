@@ -21,18 +21,35 @@
   }
   main { max-width: 680px; margin: 0 auto; padding: 56px 20px 48px; }
   h1 { font-size: 30px; font-weight: normal; line-height: 1.25; margin: 0 0 10px; }
-  .meta { color: #555; font-size: 15px; margin: 0 0 32px; }
+  .meta { color: #555; font-size: 15px; margin: 0 0 32px; text-align: left; }
   h2 { font-size: 21px; font-weight: bold; margin: 44px 0 10px; }
   p { margin: 0 0 14px; text-align: justify; }
-  .meta { text-align: left; }
   .lead { font-size: 19px; }
   .answer { font-weight: bold; }
   figure { margin: 22px 0 26px; }
   figcaption { font-size: 14px; color: #555; margin-top: 4px; text-align: justify; }
-  .box { border-left: 3px solid #111; padding: 2px 0 2px 16px; margin: 20px 0; }
   a { color: #111; }
   footer { border-top: 1px solid #ccc; margin-top: 48px; padding-top: 14px; font-size: 15px; color: #444; }
-  @media (max-width: 560px) { body { font-size: 17px; } h1 { font-size: 25px; } }
+
+  /* controls */
+  .tool { border: 1px solid #111; padding: 18px 20px 14px; margin: 22px 0 26px; }
+  .tool h3 { font-size: 17px; margin: 0 0 4px; }
+  .tool .hint { font-size: 14px; color: #555; margin-bottom: 14px; }
+  .slider { margin: 12px 0 16px; }
+  .slider label { display: flex; justify-content: space-between; font-size: 16px; margin-bottom: 4px; }
+  .slider label b { font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: #111; margin: 0; }
+  .result { border-top: 1px solid #ccc; padding-top: 12px; margin-top: 6px; font-size: 17px; }
+  .result .big { font-size: 30px; display: block; line-height: 1.2; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+  .buttons button {
+    font-family: inherit; font-size: 14px; background: #fff; color: #111;
+    border: 1px solid #111; padding: 4px 12px; cursor: pointer;
+  }
+  .buttons button.on { background: #111; color: #fff; }
+  .buttons button:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
+  .pick { font-size: 15px; min-height: 1.6em; margin-top: 6px; }
+  @media (max-width: 560px) { body { font-size: 17px; } h1 { font-size: 25px; } .tool { padding: 14px 14px 10px; } }
 </style>
 </head>
 <body>
@@ -51,10 +68,22 @@
 <p>At first sight the data say the opposite about cities. Countries where most people live in cities tend to have <i>less</i> diabetes. But that is mainly because those countries are also richer and have better health care.</p>
 <p>So instead of comparing countries with each other, I compared each country with itself over time. Seen that way the picture flips: when a country becomes more urban, its own diabetes burden goes up. City life tends to mean more sitting, less walking and more processed food.</p>
 
-<div class="box">
-<p>Two simple examples of the size of the effect:</p>
-<p>If the share of adults with obesity in a country rises from 20 to 25 percent, diabetes harm there is about <b>4 percent higher</b>.</p>
-<p style="margin-bottom:2px">If the share of people living in cities rises from 60 to 70 percent, it is about <b>3.6 percent higher</b>.</p>
+<div class="tool">
+  <h3>Try it yourself</h3>
+  <p class="hint">Move the sliders to see how much higher or lower diabetes harm would be in a country, based on the links found in my data.</p>
+  <div class="slider">
+    <label for="ob">Share of adults with obesity changes by <b id="obv">+5 points</b></label>
+    <input type="range" id="ob" min="-10" max="15" step="1" value="5">
+  </div>
+  <div class="slider">
+    <label for="ur">Share of people living in cities changes by <b id="urv">+10 points</b></label>
+    <input type="range" id="ur" min="-10" max="25" step="1" value="10">
+  </div>
+  <div class="result">
+    Diabetes harm in that country would be about
+    <span class="big" id="res">7.9% higher</span>
+    <span class="hint" id="split">4.1% from obesity, 3.6% from city living</span>
+  </div>
 </div>
 
 <p>Getting richer or spending more on health did not, by itself, lower diabetes harm from one year to the next. That does not mean money is useless. It suggests that the advantage of richer countries builds up over decades rather than year by year, and that more spending on treatment alone should not be expected to bring the burden down quickly.</p>
@@ -65,27 +94,44 @@
 
 <h2>3. What about Germany?</h2>
 <p class="answer">Care for adults is getting better, but more children are getting type 2 diabetes, and the East still does worse than the West.</p>
-<p>Germany loses fewer healthy years to diabetes than most countries, but more than France, the Netherlands or Denmark, even though it spends a lot on health. Using data from the Robert Koch-Institut, I looked inside the country.</p>
-<p>Type 2 diabetes, the kind linked to weight and lifestyle, is still rare in children, but it is becoming more common. Among German children and teenagers it rose by about 61 percent between 2014 and 2022.</p>
+<p>Germany loses fewer healthy years to diabetes than most countries, but more than its neighbours France, the Netherlands and Denmark, even though it spends a lot on health.</p>
 
 <figure>
+  <div id="compare"></div>
+  <figcaption>Healthy years of life lost to diabetes per 100,000 people, 2023, age adjusted. Hover or tap a bar for the exact value. Source: Global Burden of Disease Study 2023.</figcaption>
+</figure>
+
+<p>Using data from the Robert Koch-Institut, I looked inside the country. Type 2 diabetes, the kind linked to weight and lifestyle, is still rare in children, but it is becoming more common. Among German children and teenagers it rose by about 61 percent between 2014 and 2022.</p>
+
+<figure>
+  <div class="buttons" id="kidsBtns">
+    <button class="on" data-k="prev">How many have it</button>
+    <button data-k="inc">New cases each year</button>
+  </div>
   <div id="kids"></div>
-  <figcaption>Children and teenagers with type 2 diabetes in Germany, per 100,000. Source: Robert Koch-Institut.</figcaption>
+  <figcaption id="kidsCap">Children and teenagers with type 2 diabetes in Germany, per 100,000. Source: Robert Koch-Institut.</figcaption>
 </figure>
 
 <p>At the same time, things are improving for adults. Between 2015 and 2022, amputations caused by diabetes fell by 11 percent and avoidable hospital stays by 26 percent. Between 2013 and 2022, new disability pensions because of diabetes fell by more than a third.</p>
 <p>There is also a clear regional gap. The five eastern states have the most avoidable hospital stays for diabetes. Every state improved between 2016 and 2022, and the East caught up somewhat, but the gap is still there.</p>
 
 <figure>
+  <div class="buttons" id="stBtns">
+    <button class="on" data-v="both">2016 and 2022</button>
+    <button data-v="2016">2016 only</button>
+    <button data-v="2022">2022 only</button>
+    <button data-v="chg">How much each state improved</button>
+  </div>
   <div id="states"></div>
-  <figcaption>Avoidable hospital stays for diabetes per 100,000 people, 2016 (open circle) and 2022 (black dot). Eastern states marked *. Source: Robert Koch-Institut.</figcaption>
+  <p class="pick" id="statePick">Click or tap a state to see its numbers.</p>
+  <figcaption>Avoidable hospital stays for diabetes per 100,000 people. Eastern states marked *. Source: Robert Koch-Institut.</figcaption>
 </figure>
 
 <h2>What this means</h2>
 <p>Treating people who already have diabetes is working better, at least in Germany. But the number of people at risk keeps growing, and the strongest links in my data are with obesity and city life. That points towards prevention: healthier food, more movement in daily life, and cities designed for walking and cycling. The rise among children makes this more urgent.</p>
 
 <h2>How I did it, briefly</h2>
-<p>The diabetes figures come from the Global Burden of Disease Study 2023, the economic and population data from the World Bank, and the German figures from the Robert Koch-Institut. I analysed them in Stata, following each country over time so that fixed differences between countries, like geography or history, do not distort the results. The results show links, not proof of cause and effect. The thesis was supervised by Prof. Dr. Lars Siemers at the University of Siegen.</p>
+<p>The diabetes figures come from the Global Burden of Disease Study 2023, the economic and population data from the World Bank, and the German figures from the Robert Koch-Institut. I analysed them in Stata, following each country over time so that fixed differences between countries, like geography or history, do not distort the results. The results show links, not proof of cause and effect, so the calculator above is an illustration, not a forecast. The thesis was supervised by Prof. Dr. Lars Siemers at the University of Siegen.</p>
 
 <footer>
 Ruhollah Zamaninia · <a href="mailto:rz1369@gmail.com">rz1369@gmail.com</a> · <a href="https://linkedin.com/in/ruh-zamaninia">LinkedIn</a><br>
@@ -98,38 +144,113 @@ The full thesis, with all tables and methods, is available on request.
 const font = { family: 'Georgia, serif', size: 13, color: '#111' };
 const cfg = { responsive: true, displayModeBar: false };
 const narrow = window.innerWidth < 560;
-const base = { font, paper_bgcolor: '#fff', plot_bgcolor: '#fff', showlegend: false, margin: { t: 10, r: 14, b: 34, l: 10 } };
+const base = { font, paper_bgcolor: '#fff', plot_bgcolor: '#fff', showlegend: false,
+               margin: { t: 10, r: 14, b: 34, l: 10 }, hoverlabel: { bgcolor: '#fff', bordercolor: '#111', font } };
+const signed = (v, d) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(d);
 
-Plotly.newPlot('kids', [{
-  type: 'scatter', mode: 'lines+markers',
-  x: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
-  y: [11.71, 9.93, 10.73, 11.31, 12.52, 12.21, 13.35, 17.17, 18.90],
-  line: { color: '#111', width: 2 }, marker: { color: '#111', size: 6 },
-  hovertemplate: '%{x}: %{y:.1f} per 100,000<extra></extra>'
+// 1. Calculator: coefficients from the log model with obesity (Table 5.1, column 4)
+const B_OB = 0.0081222, B_UR = 0.0035578;
+const ob = document.getElementById('ob'), ur = document.getElementById('ur');
+function calc() {
+  const o = +ob.value, u = +ur.value;
+  const fo = (Math.exp(B_OB * o) - 1) * 100, fu = (Math.exp(B_UR * u) - 1) * 100;
+  const tot = (Math.exp(B_OB * o + B_UR * u) - 1) * 100;
+  document.getElementById('obv').textContent = signed(o, 0) + (Math.abs(o) === 1 ? ' point' : ' points');
+  document.getElementById('urv').textContent = signed(u, 0) + (Math.abs(u) === 1 ? ' point' : ' points');
+  const r = Math.abs(tot) < 0.05 ? 'about the same' : Math.abs(tot).toFixed(1) + '% ' + (tot > 0 ? 'higher' : 'lower');
+  document.getElementById('res').textContent = r;
+  document.getElementById('split').textContent =
+    signed(fo, 1) + '% from obesity, ' + signed(fu, 1) + '% from city living';
+}
+ob.addEventListener('input', calc); ur.addEventListener('input', calc); calc();
+
+// 2. Germany against neighbours, GBD 2023 (thesis sections 3.4 and 3.6)
+const cmp = [['France', 396.1], ['Netherlands', 399.0], ['Denmark', 410.9], ['Germany', 504.2], ['United Kingdom', 504.7]];
+Plotly.newPlot('compare', [{
+  type: 'bar', orientation: 'h', x: cmp.map(r => r[1]), y: cmp.map(r => r[0]),
+  marker: { color: cmp.map(r => r[0] === 'Germany' ? '#111' : '#bbb') },
+  text: cmp.map(r => r[1].toFixed(0)), textposition: 'outside', cliponaxis: false,
+  hovertemplate: '%{y}: %{x:.1f}<extra></extra>'
 }], Object.assign({}, base, {
-  height: 260,
-  xaxis: { dtick: narrow ? 2 : 1, linecolor: '#111', gridcolor: '#fff' },
-  yaxis: { range: [0, 21], gridcolor: '#eee', automargin: true }
+  height: 220, margin: { t: 6, r: 40, b: 30, l: 10 },
+  xaxis: { range: [0, 580], gridcolor: '#eee', linecolor: '#111' },
+  yaxis: { automargin: true, autorange: 'reversed', tickfont: { size: narrow ? 12 : 13 } }
 }), cfg);
 
-const s = [
+// 3. Children, Table 6.1
+const years = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];
+const kids = {
+  prev: { y: [11.71, 9.93, 10.73, 11.31, 12.52, 12.21, 13.35, 17.17, 18.90], max: 21,
+          cap: 'Children and teenagers with type 2 diabetes in Germany, per 100,000. Source: Robert Koch-Institut.',
+          unit: 'per 100,000' },
+  inc:  { y: [3.19, 3.45, 3.59, 4.11, 4.59, 5.05, 4.81, 6.39, 4.57], max: 7,
+          cap: 'New type 2 diabetes cases among children and teenagers in Germany each year, per 100,000. The 2021 jump may partly be diagnoses delayed from 2020. Source: Robert Koch-Institut.',
+          unit: 'new cases per 100,000' }
+};
+function drawKids(k) {
+  const d = kids[k];
+  Plotly.react('kids', [{
+    type: 'scatter', mode: 'lines+markers', x: years, y: d.y,
+    line: { color: '#111', width: 2 }, marker: { color: '#111', size: 7 },
+    hovertemplate: '%{x}: %{y:.1f} ' + d.unit + '<extra></extra>'
+  }], Object.assign({}, base, {
+    height: 260,
+    xaxis: { dtick: narrow ? 2 : 1, linecolor: '#111', gridcolor: '#fff' },
+    yaxis: { range: [0, d.max], gridcolor: '#eee', automargin: true }
+  }), cfg);
+  document.getElementById('kidsCap').textContent = d.cap;
+}
+document.querySelectorAll('#kidsBtns button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#kidsBtns button').forEach(x => x.classList.toggle('on', x === b));
+  drawKids(b.dataset.k);
+}));
+drawKids('prev');
+
+// 4. Federal states, Table 6.3
+const states = [
   ['Hamburg',183,151],['Bremen',188,166],['Baden-Württemberg',218,170],['Berlin',233,177],
   ['Schleswig-Holstein',212,180],['Bayern',238,182],['Niedersachsen',225,182],['Rheinland-Pfalz',221,192],
   ['Hessen',264,207],['Nordrhein-Westfalen',257,214],['Saarland',272,220],['Sachsen*',328,259],
   ['Brandenburg*',356,269],['Thüringen*',360,287],['Sachsen-Anhalt*',407,293],['Mecklenburg-Vorpommern*',465,325]
 ];
-Plotly.newPlot('states', [
-  { type: 'scatter', mode: 'lines', hoverinfo: 'skip',
-    x: s.flatMap(r => [r[1], r[2], null]), y: s.flatMap(r => [r[0], r[0], null]), line: { color: '#999', width: 1 } },
-  { type: 'scatter', mode: 'markers', x: s.map(r => r[1]), y: s.map(r => r[0]),
-    marker: { size: 8, color: '#fff', line: { color: '#111', width: 1.3 } }, hovertemplate: '%{y}, 2016: %{x}<extra></extra>' },
-  { type: 'scatter', mode: 'markers', x: s.map(r => r[2]), y: s.map(r => r[0]),
-    marker: { size: 8, color: '#111' }, hovertemplate: '%{y}, 2022: %{x}<extra></extra>' }
-], Object.assign({}, base, {
-  height: 430,
-  xaxis: { range: [130, 485], gridcolor: '#eee', linecolor: '#111' },
-  yaxis: { type: 'category', automargin: true, gridcolor: '#fff', tickfont: { size: narrow ? 11 : 13 } }
-}), cfg);
+const pct = r => (r[2] - r[1]) / r[1] * 100;
+function drawStates(v) {
+  let traces, xaxis, rows = states;
+  if (v === 'chg') {
+    rows = states.slice().sort((a, b) => pct(b) - pct(a));
+    traces = [{ type: 'bar', orientation: 'h', x: rows.map(pct), y: rows.map(r => r[0]),
+      marker: { color: rows.map(r => r[0].endsWith('*') ? '#111' : '#bbb') },
+      text: rows.map(r => signed(pct(r), 0) + '%'), textposition: 'outside', cliponaxis: false,
+      hovertemplate: '%{y}: %{x:.1f}%<extra></extra>' }];
+    xaxis = { range: [-38, 0], gridcolor: '#eee', linecolor: '#111', ticksuffix: '%' };
+  } else {
+    const dot2016 = { type: 'scatter', mode: 'markers', x: rows.map(r => r[1]), y: rows.map(r => r[0]),
+      marker: { size: 9, color: '#fff', line: { color: '#111', width: 1.4 } }, hovertemplate: '%{y}, 2016: %{x}<extra></extra>' };
+    const dot2022 = { type: 'scatter', mode: 'markers', x: rows.map(r => r[2]), y: rows.map(r => r[0]),
+      marker: { size: 9, color: '#111' }, hovertemplate: '%{y}, 2022: %{x}<extra></extra>' };
+    const line = { type: 'scatter', mode: 'lines', hoverinfo: 'skip',
+      x: rows.flatMap(r => [r[1], r[2], null]), y: rows.flatMap(r => [r[0], r[0], null]), line: { color: '#999', width: 1 } };
+    traces = v === 'both' ? [line, dot2016, dot2022] : v === '2016' ? [dot2016] : [dot2022];
+    xaxis = { range: [130, 485], gridcolor: '#eee', linecolor: '#111', title: { text: 'per 100,000', font: { size: 12 } } };
+  }
+  Plotly.react('states', traces, Object.assign({}, base, {
+    height: 440, margin: { t: 6, r: v === 'chg' ? 36 : 14, b: 40, l: 10 }, xaxis,
+    yaxis: { type: 'category', automargin: true, gridcolor: '#fff', categoryorder: 'array',
+             categoryarray: rows.map(r => r[0]), tickfont: { size: narrow ? 11 : 13 } }
+  }), cfg);
+}
+document.querySelectorAll('#stBtns button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#stBtns button').forEach(x => x.classList.toggle('on', x === b));
+  drawStates(b.dataset.v);
+}));
+drawStates('both');
+document.getElementById('states').on('plotly_click', e => {
+  const name = e.points[0].y, r = states.find(s => s[0] === name);
+  const rank = states.slice().sort((a, b) => b[2] - a[2]).findIndex(s => s[0] === name) + 1;
+  document.getElementById('statePick').innerHTML =
+    '<b>' + name.replace('*', '') + '</b>: ' + r[1] + ' in 2016, ' + r[2] + ' in 2022 (' + signed(pct(r), 1) +
+    '%). Rank ' + rank + ' of 16 in 2022, where 1 is the highest.';
+});
 </script>
 </body>
 </html>
